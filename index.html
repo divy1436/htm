@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic NFT Platform</title>
+    <style>
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --accent-color: #ff6b6b;
+            --dark-color: #2c2c54;
+            --light-color: #f7f7f7;
+            --success-color: #38c172;
+            --warning-color: #f6993f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+        
+        .wallet-info {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .wallet-address {
+            margin-right: 15px;
+            font-size: 14px;
+            background: var(--dark-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .connect-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .connect-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .connect-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .nft-display {
+            text-align: center;
+        }
+        
+        .nft-image {
+            width: 100%;
+            max-width: 350px;
+            height: 350px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+        
+        .nft-info {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        .nft-name {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .nft-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .attributes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .attribute {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .attribute-value {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-color);
+        }
+        
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .action-btn i {
+            margin-right: 10px;
+        }
+        
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .primary {
+            background: var(--accent-color);
+        }
+        
+        .primary:hover {
+            background: #ff5252;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .transaction-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .status-success {
+            background: rgba(56, 193, 114, 0.2);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .status-error {
+            background: rgba(255, 107, 107, 0.2);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .status-processing {
+            background: rgba(246, 153, 63, 0.2);
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">🔄</span>
+                Dynamic NFT Platform
+            </div>
+            <div class="wallet-info">
+                <div class="wallet-address" id="walletAddress">Not connected</div>
+                <button class="connect-btn" id="connectButton">Connect Wallet</button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="card nft-display">
+                <h2 class="card-title">
+                    <span class="card-title-icon">🖼️</span>
+                    Your Dynamic NFT
+                </h2>
+                <img src="https://placehold.co/600x400/4e54c8/ffffff?text=Dynamic+NFT" alt="Dynamic NFT" class="nft-image" id="nftImage">
+                <div class="nft-info">
+                    <h3 class="nft-name" id="nftName">Evolution #001</h3>
+                    <p class="nft-description" id="nftDescription">This NFT evolves based on market conditions and your interactions with it. Check back regularly to see its new forms!</p>
+                    
+                    <div class="attributes">
+                        <div class="attribute">
+                            <div class="attribute-label">Level</div>
+                            <div class="attribute-value" id="levelValue">1</div>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-label">Rarity</div>
+                            <div class="attribute-value" id="rarityValue">Common</div>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-label">Last Evolution</div>
+                            <div class="attribute-value" id="evolutionValue">2 days ago</div>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-label">Market Value</div>
+                            <div class="attribute-value" id="valueValue">0.05 ETH</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">⚡</span>
+                    NFT Actions
+                </h2>
+                
+                <div class="actions">
+                    <button class="action-btn primary" id="mintButton">
+                        <i>🎨</i> Mint New NFT
+                    </button>
+                    <button class="action-btn" id="evolveButton">
+                        <i>🔁</i> Check Evolution
+                    </button>
+                    <button class="action-btn" id="stakeButton">
+                        <i>💰</i> Stake NFT
+                    </button>
+                    <button class="action-btn" id="transferButton">
+                        <i>↗️</i> Transfer NFT
+                    </button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="ethPrice">$3,200</div>
+                        <div class="stat-label">ETH Price</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="gasPrice">42</div>
+                        <div class="stat-label">Gas Price (Gwei)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="userNfts">1</div>
+                        <div class="stat-label">Your NFTs</div>
+                    </div>
+                </div>
+                
+                <div class="transaction-status" id="transactionStatus">
+                    Transaction processing...
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Dynamic NFT Platform &copy; 2023 | Powered by Ethereum & IPFS</p>
+            <p>This is a demonstration interface. Actual blockchain functionality requires a Web3 wallet like MetaMask.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const connectButton = document.getElementById('connectButton');
+            const walletAddress = document.getElementById('walletAddress');
+            const mintButton = document.getElementById('mintButton');
+            const evolveButton = document.getElementById('evolveButton');
+            const stakeButton = document.getElementById('stakeButton');
+            const transferButton = document.getElementById('transferButton');
+            const transactionStatus = document.getElementById('transactionStatus');
+            const nftImage = document.getElementById('nftImage');
+            const nftName = document.getElementById('nftName');
+            const nftDescription = document.getElementById('nftDescription');
+            const levelValue = document.getElementById('levelValue');
+            const rarityValue = document.getElementById('rarityValue');
+            const evolutionValue = document.getElementById('evolutionValue');
+            const valueValue = document.getElementById('valueValue');
+            const ethPrice = document.getElementById('ethPrice');
+            const gasPrice = document.getElementById('gasPrice');
+            const userNfts = document.getElementById('userNfts');
+            
+            // State
+            let connected = false;
+            let nftLevel = 1;
+            let nftRarity = 'Common';
+            let nftValue = '0.05 ETH';
+            
+            // Simulate ETH price updates
+            function updateEthPrice() {
+                const change = (Math.random() - 0.5) * 100;
+                const currentPrice = parseFloat(ethPrice.textContent.replace('$', '').replace(',', ''));
+                const newPrice = Math.max(500, currentPrice + change);
+                ethPrice.textContent = '$' + newPrice.toFixed(0);
+                
+                // Update gas price too
+                const newGas = Math.floor(20 + Math.random() * 50);
+                gasPrice.textContent = newGas;
+            }
+            
+            setInterval(updateEthPrice, 10000);
+            
+            // Connect Wallet Functionality
+            connectButton.addEventListener('click', async () => {
+                if (connected) {
+                    // Disconnect
+                    connected = false;
+                    walletAddress.textContent = 'Not connected';
+                    connectButton.textContent = 'Connect Wallet';
+                    connectButton.disabled = false;
+                    
+                    // Disable action buttons
+                    mintButton.disabled = true;
+                    evolveButton.disabled = true;
+                    stakeButton.disabled = true;
+                    transferButton.disabled = true;
+                    
+                    showTransactionStatus('Disconnected from wallet', 'success');
+                } else {
+                    // Simulate connecting to MetaMask
+                    connectButton.disabled = true;
+                    connectButton.textContent = 'Connecting...';
+                    
+                    showTransactionStatus('Connecting to MetaMask...', 'processing');
+                    
+                    // Simulate connection delay
+                    setTimeout(() => {
+                        connected = true;
+                        const address = '0x' + Math.random().toString(16).substr(2, 10) + '...' + Math.random().toString(16).substr(2, 10);
+                        walletAddress.textContent = address;
+                        connectButton.textContent = 'Disconnect';
+                        connectButton.disabled = false;
+                        
+                        // Enable action buttons
+                        mintButton.disabled = false;
+                        evolveButton.disabled = false;
+                        stakeButton.disabled = false;
+                        transferButton.disabled = false;
+                        
+                        showTransactionStatus('Wallet connected successfully', 'success');
+                    }, 1500);
+                }
+            });
+            
+            // Mint NFT Functionality
+            mintButton.addEventListener('click', () => {
+                if (!connected) {
+                    showTransactionStatus('Please connect your wallet first', 'error');
+                    return;
+                }
+                
+                showTransactionStatus('Minting your NFT...', 'processing');
+                mintButton.disabled = true;
+                
+                // Simulate minting process
+                setTimeout(() => {
+                    nftLevel = 1;
+                    nftRarity = 'Common';
+                    nftValue = '0.05 ETH';
+                    
+                    updateNFTDisplay();
+                    userNfts.textContent = parseInt(userNfts.textContent) + 1;
+                    
+                    showTransactionStatus('NFT minted successfully!', 'success');
+                    mintButton.disabled = false;
+                }, 3000);
+            });
+            
+            // Evolve NFT Functionality
+            evolveButton.addEventListener('click', () => {
+                if (!connected) {
+                    showTransactionStatus('Please connect your wallet first', 'error');
+                    return;
+                }
+                
+                if (parseInt(userNfts.textContent) === 0) {
+                    showTransactionStatus('You need to mint an NFT first', 'error');
+                    return;
+                }
+                
+                showTransactionStatus('Checking for evolution conditions...', 'processing');
+                evolveButton.disabled = true;
+                
+                // Simulate evolution process
+                setTimeout(() => {
+                    // 30% chance to evolve
+                    if (Math.random() < 0.3) {
+                        nftLevel++;
+                        
+                        if (nftLevel === 2) {
+                            nftRarity = 'Uncommon';
+                            nftValue = '0.1 ETH';
+                        } else if (nftLevel === 3) {
+                            nftRarity = 'Rare';
+                            nftValue = '0.25 ETH';
+                        } else if (nftLevel >= 4) {
+                            nftRarity = 'Epic';
+                            nftValue = (0.5 * nftLevel).toFixed(2) + ' ETH';
+                        }
+                        
+                        updateNFTDisplay();
+                        showTransactionStatus('Your NFT has evolved to level ' + nftLevel + '!', 'success');
+                    } else {
+                        showTransactionStatus('Evolution conditions not met. Try again later.', 'error');
+                    }
+                    
+                    evolveButton.disabled = false;
+                }, 2000);
+            });
+            
+            // Stake NFT Functionality
+            stakeButton.addEventListener('click', () => {
+                if (!connected) {
+                    showTransactionStatus('Please connect your wallet first', 'error');
+                    return;
+                }
+                
+                if (parseInt(userNfts.textContent) === 0) {
+                    showTransactionStatus('You need to mint an NFT first', 'error');
+                    return;
+                }
+                
+                showTransactionStatus('Staking your NFT...', 'processing');
+                stakeButton.disabled = true;
+                
+                // Simulate staking process
+                setTimeout(() => {
+                    showTransactionStatus('NFT staked successfully! You will earn rewards over time.', 'success');
+                    stakeButton.disabled = false;
+                }, 2000);
+            });
+            
+            // Transfer NFT Functionality
+            transferButton.addEventListener('click', () => {
+                if (!connected) {
+                    showTransactionStatus('Please connect your wallet first', 'error');
+                    return;
+                }
+                
+                if (parseInt(userNfts.textContent) === 0) {
+                    showTransactionStatus('You need to mint an NFT first', 'error');
+                    return;
+                }
+                
+                showTransactionStatus('Preparing transfer...', 'processing');
+                transferButton.disabled = true;
+                
+                // Simulate transfer process
+                setTimeout(() => {
+                    userNfts.textContent = parseInt(userNfts.textContent) - 1;
+                    
+                    if (parseInt(userNfts.textContent) === 0) {
+                        // Reset NFT display if no NFTs left
+                        nftLevel = 1;
+                        nftRarity = 'Common';
+                        nftValue = '0.05 ETH';
+                        updateNFTDisplay();
+                    }
+                    
+                    showTransactionStatus('NFT transferred successfully!', 'success');
+                    transferButton.disabled = false;
+                }, 2500);
+            });
+            
+            // Update NFT display
+            function updateNFTDisplay() {
+                levelValue.textContent = nftLevel;
+                rarityValue.textContent = nftRarity;
+                valueValue.textContent = nftValue;
+                
+                // Update image based on level
+                const imageUrl = `https://placehold.co/600x400/4e54c8/ffffff?text=Dynamic+NFT+Level+${nftLevel}`;
+                nftImage.src = imageUrl;
+                
+                // Update name and description
+                nftName.textContent = `Evolution #${Math.floor(100 + nftLevel * 10)}`;
+                nftDescription.textContent = `This is a ${nftRarity.toLowerCase()} level ${nftLevel} dynamic NFT. `;
+                
+                if (nftLevel === 1) {
+                    nftDescription.textContent += 'It has just begun its evolution journey.';
+                } else if (nftLevel === 2) {
+                    nftDescription.textContent += 'It has evolved once and is growing stronger.';
+                } else if (nftLevel === 3) {
+                    nftDescription.textContent += 'It has reached a rare form with special attributes.';
+                } else {
+                    nftDescription.textContent += 'It has achieved epic status with incredible powers.';
+                }
+                
+                // Update last evolution time
+                evolutionValue.textContent = 'Just now';
+            }
+            
+            // Show transaction status
+            function showTransactionStatus(message, type) {
+                transactionStatus.textContent = message;
+                transactionStatus.style.display = 'block';
+                
+                // Remove previous status classes
+                transactionStatus.classList.remove('status-success', 'status-error', 'status-processing');
+                
+                // Add appropriate class
+                if (type === 'success') {
+                    transactionStatus.classList.add('status-success');
+                } else if (type === 'error') {
+                    transactionStatus.classList.add('status-error');
+                } else if (type === 'processing') {
+                    transactionStatus.classList.add('status-processing');
+                }
+                
+                // Auto-hide after 5 seconds for success/error
+                if (type !== 'processing') {
+                    setTimeout(() => {
+                        transactionStatus.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            
+            // Initialize with buttons disabled
+            mintButton.disabled = true;
+            evolveButton.disabled = true;
+            stakeButton.disabled = true;
+            transferButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
